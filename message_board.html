@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./js/jquery-3.5.1.js"></script>
+    <script src="./js/jquery-ui.js"></script>
+</head>
+<style>
+    * {
+        margin: 0;
+    }
+
+    .main {
+        width: 50vw;
+        margin: 0 auto;
+    }
+
+    .main h1 {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .search1 {
+        display: flex;
+        padding-bottom: 20px;
+        border-bottom: 1px solid black;
+        margin-bottom: 20px;
+    }
+
+    .search1 .search_text {
+        margin-right: 10px;
+    }
+
+    .subject1 {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .subject1 p {
+        margin-right: 10px;
+    }
+
+    .subject {}
+
+    .submit {
+        margin: 0 auto;
+        margin-bottom: 50px;
+        display: block;
+    }
+
+    .content1 {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
+    .content1 p {
+        margin-right: 10px;
+    }
+
+    .content {
+        width: 40vw;
+    }
+
+    ul {
+        padding: 0;
+        border-top: 1px solid #000;
+        padding-top: 20px;
+        width: 50vw;
+    }
+
+    ul li {
+        list-style: none;
+        border: 1px solid black;
+        padding-left: 20px;
+        margin-bottom: 10px;
+    }
+
+    .edit_text {}
+
+    h2 {
+        font-size: 20px;
+        display: flex;
+    }
+
+    h3 {
+        font-size: 20px;
+        display: flex;
+    }
+
+
+
+
+    .-none {
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="main">
+        <h1>留言板</h1>
+        <div class="search1">
+            <input type="text" placeholder="請輸入搜尋主題" class="search_text">
+            <input type="button" value="搜尋" class="search_btn">
+        </div>
+        <div class="subject1">
+            <p><span>*</span>主題:</p>
+            <input type="text" placeholder="請輸入主題" class="subject">
+        </div>
+        <div class="content1">
+            <p><span>*</span>內容:</p>
+            <textarea name="" id="" cols="30" rows="10" class="content"></textarea><br>
+        </div>
+        <input type="submit" class="submit">
+
+        <ul class="ul">
+            <li>
+                <h2>主題: <p class="li_subject"></p>
+                </h2>
+                <input type="text" placeholder="請輸入主題" class="edit_subject -none">
+                <h3>內容: <p class="li_content"></p>
+                </h3>
+                <textarea name="" id="" cols="30" rows="10" class="edit_text -none"></textarea>
+                <input type="button" value="修改" class="edit">
+                <input type="button" value="刪除" class="delete">
+            </li>
+        </ul>
+
+    </div>
+    <script>
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("delete")) {
+                delete_one(e);
+            } else if (e.target.classList.contains("edit")) {
+                edit(e);
+            } else if (e.target.classList.contains("submit")) {
+                insert();
+            } else if (e.target.classList.contains("search_btn")) {
+                search();
+            };
+        });
+
+        let subject = document.getElementsByClassName('subject')[0];
+        let content = document.getElementsByClassName('content')[0];
+        let ul = document.getElementsByClassName('ul')[0];
+        function insert() {
+            let subject_trim = subject.value.trim();
+            let content_trim = content.value.trim();
+            let str = `<li>
+                            <h2>主題: <p class="li_subject">${subject_trim}</p></h2>
+                            <input type="text" placeholder="請輸入主題" class="edit_subject -none" value="${subject_trim}">
+                            <h3>內容: <p class="li_content">${content_trim}</p></h3>
+                            <textarea name="" id="" cols="30" rows="10" class="edit_text -none">${content_trim}</textarea>
+                            <input type="button" value="修改" class="edit">
+                            <input type="button" value="刪除" class="delete">
+                        </li>`;
+
+            ul.insertAdjacentHTML("afterbegin", str);
+            subject.value = '';
+            content.value = '';
+        }
+
+        function delete_one(e) {
+            let li = e.target.closest("li");
+            li.classList.add('-none');
+        }
+
+        function edit(e) {
+            let li = e.target.closest("li");
+            let edit_text = li.querySelector('.edit_text');
+            let edit_subject = li.querySelector('.edit_subject');
+            let li_subject = li.querySelector('.li_subject');
+            let li_content = li.querySelector('.li_content');
+            if (li_subject.classList.contains('-none') && li_content.classList.contains('-none')) {
+                edit_text.classList.add('-none');
+                edit_subject.classList.add('-none');
+                li_subject.classList.remove('-none');
+                li_content.classList.remove('-none');
+                li_subject.innerHTML = edit_subject.value.trim();
+                li_content.innerHTML = edit_text.value.trim();
+            } else {
+                edit_text.classList.remove('-none');
+                edit_subject.classList.remove('-none');
+                li_subject.classList.add('-none');
+                li_content.classList.add('-none');
+            }
+        }
+
+        function search() {
+            let search_text = document.getElementsByClassName('search_text')[0];
+            let li_subject = document.querySelectorAll('.li_subject');
+            for (let i = 0; i < li_subject.length; i++) {
+                // console.log(li_subject[i].innerHTML);
+                if (search_text.value === li_subject[i].innerHTML) {
+                    li_subject[i].closest('li').style.background = 'yellow';
+                }
+            };
+        };
+    </script>
+</body>
+
+</html>
